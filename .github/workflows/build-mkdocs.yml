@@ -45,6 +45,8 @@ jobs:
 
             - name: Remove Prev Version
               run: |
+                  git config --global user.email "ci-admin@vmware.com"
+                  git config --global user.name "WWCoE CI admin"
                   rm -rf testing123
                   git add .
                   git commit  -s -m "clean prev version"
