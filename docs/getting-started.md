@@ -2,8 +2,9 @@
 hide:
   - navigation
 ---
-# Getting Started
+# Getting Started - 00
 Here you will find information on how to easily get onboarded working with Build Tools for VMware Aria.
+
 
 ## Overview
 Build Tools for VMware Aria relies on a private artifact manager like JFrog Artifactory OSS ( no limitation to it being public,
