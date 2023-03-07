@@ -37,7 +37,7 @@ jobs:
             - name: Stash
               run: |
                   git stash
-                  git checkout update-docs-pages
+                  git checkout --force refs/remotes/origin/update-docs-pages
 
             - name: Remove Prev Version
               run: |
