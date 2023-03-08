@@ -11,19 +11,24 @@ theme:
     - search.highlight
     - search.suggest
     - search.share
-  palette: 
-    - primary: teal
+    - content.code.annotate
+  palette:
     # Palette toggle for light mode
     - scheme: default
+      primary: teal
+      accent: deep orange
       toggle:
-        icon: material/weather-night 
+        icon: material/weather-night
         name: Dark Mode
 
     # Palette toggle for dark mode
     - scheme: slate
+      primary: teal
+      accent: deep orange
       toggle:
         icon: material/weather-sunny
         name: Light Mode
+
 extra:
   version:
     provider: mike
@@ -37,6 +42,10 @@ plugins:
       css_dir: css
       javascript_dir: js
 
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 # extra_css:
 #   - css/version-select.css
 # extra_javascript:
