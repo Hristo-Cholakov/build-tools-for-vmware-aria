@@ -1,5 +1,5 @@
 nav:
-    - home.md
+    - index.md
     - getting-started
     - usage
     - dev-setup
