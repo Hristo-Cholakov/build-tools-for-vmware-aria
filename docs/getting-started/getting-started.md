@@ -1,9 +1,8 @@
 ---
 hide:
-  - navigation
 ---
-# Getting Started - 00
-Here you will find information on how to easily get onboarded working with Build Tools for VMware Aria.
+# Getting Started
+Here you will find information on how to easily get onboard working with Build Tools for VMware Aria.
 
 
 ## Overview
