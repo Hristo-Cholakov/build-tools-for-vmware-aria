@@ -12,6 +12,7 @@ theme:
     - search.suggest
     - search.share
   palette: 
+    - primary: teal
     # Palette toggle for light mode
     - scheme: default
       toggle:
