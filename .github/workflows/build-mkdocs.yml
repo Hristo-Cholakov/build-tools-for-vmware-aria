@@ -3,57 +3,57 @@
 name: "Build MkDocs"
 
 on:
-    push:
+  push:
 
 jobs:
-    mkdocs:
-        name: MkDocs
-        runs-on: ubuntu-latest
+  mkdocs:
+    name: MkDocs
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-            - name: Install Python
-              uses: actions/setup-python@v2
-              with:
-                  python-version: 3.9
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-            - name: Install MkDocs
-              run: |
-                  pip install mkdocs
-                  pip install mkdocs-material
-                  pip install mike
-                  pip install mkdocs-awesome-pages-plugin
+      - name: Install MkDocs
+        run: |
+          pip install mkdocs
+          pip install mkdocs-material
+          pip install mike
+          pip install mkdocs-awesome-pages-plugin
 
-            - name: Build MkDocs
-              run: |
-                  rm -rf testing123
-                  mkdir testing123
-                  mkdocs build
-                  mv site/* testing123/
-                  git add testing123/
+      - name: Build MkDocs
+        run: |
+          rm -rf testing123
+          mkdir testing123
+          mkdocs build
+          mv site/* testing123/
+          git add testing123/
 
-            - name: Stash
-              run: |
-                  git stash
-                  
-            - name: Checkout other branch
-              uses: actions/checkout@v2
-              with:
-                ref: update-docs-pages
+      - name: Stash
+        run: |
+          git stash
 
-            - name: Remove Prev Version
-              run: |
-                  git config --global user.email "ci-admin@vmware.com"
-                  git config --global user.name "WWCoE CI admin"
-                  rm -rf testing123
-                  git add .
-                  git commit  -s -m "clean prev version"
-                  git push
+      - name: Checkout other branch
+        uses: actions/checkout@v2
+        with:
+          ref: update-docs-pages
 
-            - name: Push New Version
-              run: |
-                  git stash pop
-                  git commit  -s -m "add new version"
-                  git push
+      - name: Remove Prev Version
+        run: |
+          git config --global user.email "ci-admin@vmware.com"
+          git config --global user.name "WWCoE CI admin"
+          rm -rf testing123
+          git add .
+          git commit  -s -m "clean prev version"
+          git push
+
+      - name: Push New Version
+        run: |
+          git stash pop
+          git commit  -s -m "add new version"
+          git push
