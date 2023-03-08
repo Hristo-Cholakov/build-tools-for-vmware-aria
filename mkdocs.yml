@@ -16,7 +16,7 @@ theme:
     # Palette toggle for light mode
     - scheme: default
       primary: teal
-      accent: deep orange
+      accent: amber
       toggle:
         icon: material/weather-night
         name: Dark Mode
