@@ -4,7 +4,7 @@ Build Tools for VMware Aria uses **[license-maven-plugin](https://www.mojohaus.o
 The plugin is active on project build if **license_data/licenses.properties** exists in project's root folder.
 If activated it will generate license file and license header from templates provided in **license_data/**.
 
-# Use
+## Use
 
 ## Generate project from an archetype with custom licensing
 ### You need to use next additional parameters when creating new project:

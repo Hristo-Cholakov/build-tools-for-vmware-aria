@@ -5,7 +5,7 @@ Before you continue with this section validate that all of the prerequisites are
 ## Prerequisites
 - Install and Configure [Build Tools for VMware Aria System](setup-workstation-maven.md)
 
-# Use
+## Use
 
 ABX Project is a development project representation of ABX package content.
 

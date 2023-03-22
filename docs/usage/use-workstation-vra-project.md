@@ -4,7 +4,7 @@ Before you continue with this section validate that all of the prerequisites are
 ## Prerequisites
 - Install and Configure [Build Tools for VMware Aria System](setup-workstation-maven.md)
 
-# Use
+## Use
 
 vRA Project is a filesystem representation of vRA content into human frendly YAML format. The project consist of content descriptor and content container.
 
