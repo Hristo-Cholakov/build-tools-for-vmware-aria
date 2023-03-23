@@ -1,4 +1,4 @@
-# Build Tools for VMware Aria - Bundle Installer
+# Bundle Installer
 
 Before you continue with this section validate that all of the prerequisites are met.
 ## Prerequisites

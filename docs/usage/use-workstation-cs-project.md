@@ -1,4 +1,4 @@
-# Build Tools for VMware Aria for Code Stream Projects
+# Code Stream Projects
 
 Before you continue with this section validate that all of the prerequisites are met.
 ## Prerequisites

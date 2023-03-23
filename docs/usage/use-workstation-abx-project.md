@@ -1,4 +1,4 @@
-# Build Tools for VMware Aria for ABX Projects
+# ABX Projects
 
 Before you continue with this section validate that all of the prerequisites are met.
 
@@ -15,8 +15,8 @@ ABX Project is a development project representation of ABX package content.
 
 To create a new ABX project from archetype use the following commands for the respective runtime:
 
+### NodeJS
 ```Bash
-# NodeJS
 mvn archetype:generate \
     -DinteractiveMode=false \
     -DarchetypeGroupId=com.vmware.pscoe.polyglot.archetypes \
@@ -26,8 +26,10 @@ mvn archetype:generate \
     -DartifactId=abx \
     -Druntime=nodejs \
     -Dtype=abx
- 
-# Python
+```
+
+### Python
+```Bash
 mvn archetype:generate \
     -DinteractiveMode=false \
     -DarchetypeGroupId=com.vmware.pscoe.polyglot.archetypes \
@@ -37,8 +39,9 @@ mvn archetype:generate \
     -DartifactId=abx \
     -Druntime=python \
     -Dtype=abx
- 
-# PowerShell
+```
+### PowerShell
+```Bash
 mvn archetype:generate \
     -DinteractiveMode=false \
     -DarchetypeGroupId=com.vmware.pscoe.polyglot.archetypes \

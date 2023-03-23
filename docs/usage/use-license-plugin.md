@@ -1,4 +1,4 @@
-# Build Tools for VMware Aria - License plugin
+# License plugin
 
 Build Tools for VMware Aria uses **[license-maven-plugin](https://www.mojohaus.org/license-maven-plugin/index.html)** as a production-ready solution for managing the licenses.
 The plugin is active on project build if **license_data/licenses.properties** exists in project's root folder.
