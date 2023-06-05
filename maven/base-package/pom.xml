@@ -11,9 +11,10 @@
 	</parent>
 
     <groupId>com.vmware.pscoe.o11n</groupId>
-    <artifactId>base-package</artifactId>
+    <artifactId>base-packages-parent</artifactId>
     <packaging>pom</packaging>
     <modules>
+		<module>base-package</module>
         <module>xml-package</module>
         <module>actions-package</module>
         <module>vra-package</module>
@@ -312,6 +313,7 @@
                         <vropsUser>${vrli.vropsUser}</vropsUser>
                         <vropsPassword>${vrli.vropsPassword}</vropsPassword>
                         <vropsAuthSource>${vrli.vropsAuthSource}</vropsAuthSource>
+                        <packageImportOverwriteMode>${vrli.packageImportOverwriteMode}</packageImportOverwriteMode>
                     </vrli>
                     <ignoreSslCertificate>${vrealize.ssl.ignore.certificate}</ignoreSslCertificate>
                     <ignoreSslHostname>${vrealize.ssl.ignore.hostname}</ignoreSslHostname>

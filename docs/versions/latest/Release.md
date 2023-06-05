@@ -28,36 +28,18 @@
 
 [//]: # (Improvements -> Bugfixes/hotfixes or general improvements)
 ## Improvements
-
-### *vrealize:clean will not fail if store does not support it* 
-When we perform `mvn vrealize:clean -DincludeDependencies=true -DcleanUpOldVersions=true -DcleanUpLastVersion=false -PPROFILE_NAME`
-some stores do not support cleaning or have not implemented it.
-
-#### Previous Behavior
-Previously in case of an unsupported store, the process would fail with either UnsupportedOperationException or NotImplementedException,
-since the exception was never handled in the vrealize CleanMojo
-
-#### New Behavior
-UnsupportedOperationException is now being caught (NotImplementedException as well since it's a child) and a warning is logged instead.
-The process is allowed to continue.
-
-#### Relevant Documentation:
-
-* [Vrealize Clean](./Components/Archetypes/General/Goals/Vrealize%20Clean.md)
+[//]: # (### *Improvement Name* )
+[//]: # (Talk ONLY regarding the improvement)
+[//]: # (Optional But higlhy recommended)
+[//]: # (#### Previous Behavior)
+[//]: # (Explain how it used to behave, regarding to the change)
+[//]: # (Optional But higlhy recommended)
+[//]: # (#### New Behavior)
+[//]: # (Explain how it behaves now, regarding to the change)
+[//]: # (Optional But higlhy recommended Specify *NONE* if missing)
+[//]: # (#### Relevant Documentation:)
 
 
-
-### *Ability to deploy base package to artifactory*
-It's expected that you can deploy all Build Tools for VMware Aria projects to artifactory and to local maven repository
-
-#### Previous Behavior
-When you trigger `mvn clean package install deploy` against base package, the build will fail
-
-#### New Behavior
-When you trigger `mvn clean package install deploy` against base package, the build will succeed and will deploy the package to artifactory server and to local maven repository.
-
-#### Relevant Documentation:
-None
 
 ## Upgrade procedure:
 [//]: # (Explain in details if something needs to be done)
