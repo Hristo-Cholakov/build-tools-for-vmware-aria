@@ -1,5 +1,6 @@
 site_name: Build Tools for Aria Docs
 repo_url: https://github.com/vmware/build-tools-for-vmware-aria
+docs_dir: mkdocs
 theme:
   name: material
   logo: assets/logo.svg
