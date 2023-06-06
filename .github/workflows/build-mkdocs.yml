@@ -27,11 +27,14 @@ jobs:
           pip install mkdocs-awesome-pages-plugin
           pip install mkdocs-macros-plugin
 
-      - name: Update Latest Release Variable
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Get Latest Release Version
         run: |
-          IAC_LATEST_RELEASE=$(git tag --sort=-version:refname | head -n 1 | cut -c 2-)
-          echo Latest Realease: $IAC_LATEST_RELEASE
-          yq eval ".extra.iac.latest_release = \"$IAC_LATEST_RELEASE\"" -i mkdocs.yml
+          echo Latest Realease: ${{ steps.previoustag.outputs.tag }}
+          yq eval '.extra.iac.latest_release = ${{ steps.previoustag.outputs.tag }}' -i mkdocs.yml
 
       - name: Build MkDocs
         run: |
