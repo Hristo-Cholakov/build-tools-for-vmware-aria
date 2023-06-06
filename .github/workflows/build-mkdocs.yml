@@ -29,7 +29,7 @@ jobs:
 
       - name: Update Latest Release Variable
         run: |
-          export IAC_LATEST_RELEASE=$(git describe --tags --abbrev=0 | cut -c 2-)
+          export IAC_LATEST_RELEASE=$(git tag --sort=-version:refname | head -n 1 | cut -c 2-)
           echo Latest Realease: $IAC_LATEST_RELEASE
           yq eval '.extra.iac.latest_release = env(IAC_LATEST_RELEASE)' -i mkdocs.yml
 
