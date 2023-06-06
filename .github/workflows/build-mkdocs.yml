@@ -25,6 +25,11 @@ jobs:
           pip install mkdocs-material
           pip install mike
           pip install mkdocs-awesome-pages-plugin
+          pip install mkdocs-macros-plugin
+
+      - name: Update Latest Release Variable
+        run: |
+          yq eval '.extra.iac.latest_release = "'"$(git describe --tags --abbrev=0 | cut -c 2-)"'"' -i mkdocs.yml
 
       - name: Build MkDocs
         run: |

@@ -1,8 +1,12 @@
-# vRA Projects
+---
+title: vRealize Automation 7.x
+---
 
-Before you continue with this section validate that all of the prerequisites are met.
+# vRealize Automation 7.x Project
+
 ## Prerequisites
-- Install and Configure [Build Tools for VMware Aria System](setup-workstation-maven.md)
+- Install and Configure #TO DO
+- {{ iac.latest_release }}
 
 ## Use
 
