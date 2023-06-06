@@ -42,7 +42,7 @@ jobs:
           mkdocs build
           mv site/* testing123/
           git add testing123/
-          git add mkdocs.yml
+          git checkout mkdocs.yml
 
       - name: Stash
         run: |
