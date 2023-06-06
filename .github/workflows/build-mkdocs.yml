@@ -4,6 +4,7 @@ name: "Build MkDocs"
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   mkdocs:
