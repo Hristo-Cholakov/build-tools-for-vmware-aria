@@ -29,9 +29,9 @@ jobs:
 
       - name: Update Latest Release Variable
         run: |
-          echo "IAC_LATEST_RELEASE=$(git tag --sort=-version:refname | head -n 1 | cut -c 2-)" >> $GITHUB_ENV
+          IAC_LATEST_RELEASE=$(git tag --sort=-version:refname | head -n 1 | cut -c 2-)
           echo Latest Realease: $IAC_LATEST_RELEASE
-          yq eval '.extra.iac.latest_release = env(IAC_LATEST_RELEASE)' -i mkdocs.yml
+          yq eval ".extra.iac.latest_release = \"$IAC_LATEST_RELEASE\"" -i mkdocs.yml
 
       - name: Build MkDocs
         run: |
