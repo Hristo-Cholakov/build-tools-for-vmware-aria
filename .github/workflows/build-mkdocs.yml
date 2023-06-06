@@ -48,7 +48,7 @@ jobs:
           git stash
 
       - name: Checkout other branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: update-docs-pages
 
@@ -58,7 +58,7 @@ jobs:
           git config --global user.name "WWCoE CI admin"
           rm -rf testing123
           git add .
-          git commit  -s -m "clean prev version"
+          git commit --allow-empty -s -m "clean prev version"
           git push
 
       - name: Push New Version
