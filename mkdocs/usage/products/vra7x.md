@@ -4,9 +4,21 @@ title: vRealize Automation 7.x
 
 # vRealize Automation 7.x Project
 
+=== "Windows"
+
+    ``` sh
+    pip install windows # (1)!
+    ```
+
+    1.  {{ hints.archetype.artifactId }}
+
+
+
+{% include-markdown "../../assets/docs/mvn/build-project.md" %}
+
+
 ## Prerequisites
 - Install and Configure #TO DO
-- {{ iac.latest_release }}
 
 ## Use
 
@@ -25,7 +37,7 @@ mvn archetype:generate \
     -DinteractiveMode=false \
     -DarchetypeGroupId=com.vmware.pscoe.vra.archetypes \
     -DarchetypeArtifactId=package-vra-archetype \
-    -DarchetypeVersion=<iac_for_vrealize_version> \
+    -DarchetypeVersion={{ iac.latest_release }} \
     -DgroupId=local.corp.it.cloud \
     -DartifactId=catalog
 ```
