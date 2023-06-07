@@ -29,6 +29,7 @@ jobs:
           pip install mike
           pip install mkdocs-awesome-pages-plugin
           pip install mkdocs-macros-plugin
+          pip install mkdocs-include-markdown-plugin
 
       - name: Update Latest Release Variable
         run: |

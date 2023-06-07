@@ -33,7 +33,11 @@ extra:
     provider: mike
   iac:
     latest_release: 2.32.0
+  hints:
+    archetype:
+      artifactId: Arch Hind
 plugins:
+  - include-markdown
   - search
   - awesome-pages
   - tags
