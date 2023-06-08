@@ -20,12 +20,12 @@ To create a new project of this type, you use the following command:
 
 ```
 mvn archetype:generate \
-    -DinteractiveMode=false \
-    -DarchetypeGroupId=com.vmware.pscoe.o11n.archetypes \
-    -DarchetypeArtifactId=package-actions-archetype \
-    -DarchetypeVersion=<iac_for_vrealize_version> \
-    -DgroupId=local.corp.it.cloud \
-    -DartifactId=dns
+  -DinteractiveMode=false \
+  -DarchetypeGroupId=com.vmware.pscoe.o11n.archetypes \
+  -DarchetypeArtifactId=package-actions-archetype \
+  -DarchetypeVersion=<iac_for_vrealize_version> \
+  -DgroupId=local.corp.it.cloud \
+  -DartifactId=dns
 ```
 
 This will generate the following project file structure:

@@ -47,3 +47,4 @@ typescript/vrotsc-annotations/package-lock.json
 .vscode/*
 
 .flattened-pom.xml
+site/**

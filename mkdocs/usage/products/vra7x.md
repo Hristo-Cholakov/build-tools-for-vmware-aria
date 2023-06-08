@@ -4,58 +4,53 @@ title: vRealize Automation 7.x
 
 # vRealize Automation 7.x Project
 
-=== "Windows"
+## About
+vRA project is a filesystem representation of vRA content into human friendly YAML or JSON format. The project consist of content descriptor and content container.
 
-    ``` sh
-    pip install windows # (1)!
-    ```
-
-    1.  {{ hints.archetype.artifactId }}
-
-
-
-{% include-markdown "../../assets/docs/mvn/build-project.md" %}
-
-
-## Prerequisites
-- Install and Configure #TO DO
-
-## Use
-
-vRA Project is a filesystem representation of vRA content into human frendly YAML format. The project consist of content descriptor and content container.
-
-- *Content Descriptor* defines what part vRA content will be part of this project.
+- *Content Descriptor* defines what vRA content will be part of this project.
 - *Content Container* holds the actual content representation.
 
-## Crate New vRA Project
+## Prerequisites
+- Install and Configure #TO DO: link to workstation setup
 
-**Build Tools for VMware Aria** prvides ready to use project templates (*maven archetypes*).
+## Crate New vRA 7 Project
+{{ general.bta_name }} provides ready to use vRA 7 project templates using *maven archetypes*.
 
-To create a new vRA project from archetype use the following command:
+To create a new vRA 7 project use the following command:
 ```Bash
-mvn archetype:generate \
-    -DinteractiveMode=false \
-    -DarchetypeGroupId=com.vmware.pscoe.vra.archetypes \
-    -DarchetypeArtifactId=package-vra-archetype \
-    -DarchetypeVersion={{ iac.latest_release }} \
-    -DgroupId=local.corp.it.cloud \
-    -DartifactId=catalog
+args=(
+    "-DinteractiveMode=false"
+    "-DarchetypeGroupId=com.vmware.pscoe.vra.archetypes"
+    "-DarchetypeArtifactId=package-vra-archetype"
+    "-DarchetypeVersion={{ iac.latest_release }}"
+    "-DgroupId={{ archetype.customer_project.group_id}}" # (1)!
+    "-DartifactId={{ archetype.customer_project.artifact_id}}" # (2)!
+)
+mvn archetype:generate "${args[@]}"
 ```
 
-The result of this command will produce the following project file structure:
+1.  {{ archetype.customer_project.group_id_hint}}
+2.  {{ archetype.customer_project.artifact_id_hint}}
+   
+The result of the command will produce the following file structure:
 ```
-catalog
+.
 ├── README.md
 ├── content.yaml
+├── license_data
+│   ├── _license
+│   │   ├── template_header.txt.ftl
+│   │   └── template_license.txt.ftl
+│   └── licenses.properties
 ├── pom.xml
 ├── release.sh
 └── src
     └── main
+        └── resources
+            └── README.md
 ```
 
-Content Descriptor is implemented by content.yaml file with the following defaults.
-
-**Note**: *vRA Project supports only content types outlined into content descriptor.*
+Content Descriptor is implemented by content.yaml file with the following defaults:
 ```
 ---
 # Example describing for export Composite blueprints by their names
@@ -73,12 +68,14 @@ xaas-resource-action:
 xaas-resource-type:
 xaas-resource-mapping:
 workflow-subscription:
-global-property-group:
-global-property-definition:
-...%
+...
 ```
+!!! note
+    vRA Project supports only content types outlined into Content Descriptor.
 
-To capture the state of your vRA environment simply fill in the names of the content objects you would like to capture and look at the Pull section of this document.
+To capture the state of your vRA environment simply fill in the names of the content objects and follow the [Pull](#pull) section.
+
+
 
 ## Building
 You can build any vRA project from sources using Maven:

@@ -11,4 +11,4 @@ mvn clean package
     pip install windows # (1)!
     ```
 
-    1.  {{ hints.archetype.artifactId }}
+    1.  test
