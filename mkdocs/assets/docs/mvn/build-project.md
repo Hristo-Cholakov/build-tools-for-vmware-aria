@@ -1,14 +1,5 @@
 ## Building
-You can build any vRA project from sources using Maven:
+To build the project, execute the following maven command:
 ```bash
 mvn clean package
 ```
-
-
-=== "Test complex"
-
-    ``` sh
-    pip install windows # (1)!
-    ```
-
-    1.  test

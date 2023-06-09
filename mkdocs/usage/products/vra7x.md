@@ -38,10 +38,10 @@ The result of the command will produce the following file structure:
 ├── README.md
 ├── content.yaml
 ├── license_data
-│   ├── _license
-│   │   ├── template_header.txt.ftl
-│   │   └── template_license.txt.ftl
-│   └── licenses.properties
+│   ├── _license
+│   │   ├── template_header.txt.ftl
+│   │   └── template_license.txt.ftl
+│   └── licenses.properties
 ├── pom.xml
 ├── release.sh
 └── src
@@ -75,29 +75,54 @@ workflow-subscription:
 
 To capture the state of your vRA environment simply fill in the names of the content objects and follow the [Pull](#pull) section.
 
+<!-- Build Section -->
+{% include-markdown "../../assets/docs/mvn/build-project.md" %}
+The output of the command will result in **{{ archetype.customer_project.group_id}}.{{ archetype.customer_project.artifact_id}}-1.0.0-SNAPSHOT.vra** file generated in the target folder of the project.
+
+## Environment Connection Parameters
+There are two ways to pass the vRA connection parameters to maven pull/push command:
+=== "Use Maven Profiles"
+    Append the following profile section in your maven settings.xml file.
+
+    ``` xml
+    ...<!--# (1)! -->
+    <profiles>
+      ...
+      <profile>
+          <id>vra-env</id>
+          <properties>
+              <!--vRA Connection-->
+              <vra.host>vra-fqdn</vra.host>
+              <vra.port>443</vra.port>
+              <vra.username>configurationadmin@vsphere.local</vra.username>
+              <vra.password>*****</vra.password>
+              <vra.tenant>vsphere.local</vra.tenant>
+          </properties>
+      </profile>
+    </profiles>
+    ```
+
+    1.  {{ archetype.customer_project.maven_settings_location_hint}}
+
+    Use the profile by passing it with:
+    ``` bash
+    mvn vra:pull -Pvra-env
+    ```
+
+=== "Directly Pass The Parameters"
+
+    ``` sh
+    mvn vra:pull -Dvra.host=vra-fqdn -Dvra.port=443 -Dvra.username=configurationadmin@vsphere.local -Dvra.password=***** -Dvra.tenant=vsphere.local
+    ```
 
 
-## Building
-You can build any vRA project from sources using Maven:
-```bash
-mvn clean package
-```
 
-This will produce a vRA package with the groupId, artifactId and version specified in the pom. For example:
-```xml
-<groupId>local.corp.it.cloud</groupId>
-<artifactId>catalog</artifactId>
-<version>1.0.0-SNAPSHOT</version>
-<packaging>vra</packaging>
-```
-will result in **local.corp.it.cloud.catalog-1.0.0-SNAPSHOT.vra** generated in the target folder of your project.
-
-## Pull
+## Pull Content
 When working on a vRA project, you mainly make changes on a live server using the vRA Console and then you need to capture those changes in the maven project on your filesystem.
 
 To support this use case, the toolchain comes with a custom goal "vra:pull". The following command will "pull" the content outlined into *Content Descriptor* file to the current project from a specified server and expand its content in the local filesystem overriding any local content:
 ```bash
-vra:pull -Dvra.host=10.29.26.18 -Dvra.port=443 -Dvra.username=configurationadmin@vsphere.local -Dvra.password=*** -Dvra.tenant=vsphere.local
+mvn vra:pull -Dvra.host=10.29.26.18 -Dvra.port=443 -Dvra.username=configurationadmin@vsphere.local -Dvra.password=*** -Dvra.tenant=vsphere.local
 ```
 A better approach is to have the different vRO/vRA development environments specified as profiles in the local
 settings.xml file by adding the following snippet under "profiles":
@@ -129,7 +154,7 @@ mvn vra:pull -Pcorp-env
 > Note that ```vra:pull``` will fail if the content.yaml is empty or it cannot find some of the described content 
 on the target vRA server.
 
-## Push
+## Push Content
 To deploy the code developed in the local project or checked out from source control to a live server, you can use
 the ```vrealize:push``` command:
 ```bash
