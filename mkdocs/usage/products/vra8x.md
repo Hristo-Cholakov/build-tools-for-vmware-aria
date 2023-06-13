@@ -1,18 +1,21 @@
-# vRA NG Projects
+---
+title: vRealize Automation 8.x
+---
 
-Before you continue with this section validate that all of the prerequisites are met.
-## Prerequisites
-- Install and Configure [Build Tools for VMware Aria System](setup-workstation-maven.md)
+# vRealize Automation 8.x Project
 
-## Use
+## About
+vRA 8 project is a filesystem representation of vRA content into human friendly YAML or JSON format. The project consist of content descriptor and content container.
 
-vRA NG Project is a filesystem representation of vRA NG content into human friendly YAML and/or JSON format. The project consist of content descriptor and content container.
-
-- *Content Descriptor* defines what part vRA NG content will be part of this project.
+- *Content Descriptor* defines what vRA content will be part of this project.
 - *Content Container* holds the actual content representation.
 
-## Create New vRA NG Project
+## Prerequisites
+Before you continue with this section validate that all of the prerequisites are met.
+- Install and Configure #TO DO: link to workstation setup
 
+
+## Create New vRA 8 Project
 **Build Tools for VMware Aria** provides ready to use project templates (*maven archetypes*).
 
 To create a new vRA project from archetype use the following command:
@@ -246,7 +249,7 @@ settings.xml file by adding the following snippet under "profiles":
         <vrang.port>443</vrang.port>
         <vrang.project.name>{project+name}</vrang.project.name>
         <vrang.org.id>{org+id}</vrang.org.id>
-		<vrang.org.name>{org+name}</vrang.org.name>
+		    <vrang.org.name>{org+name}</vrang.org.name>
         <vrang.refresh.token>{refresh+token}</vrang.refresh.token>
         <vrang.bp.release>true</vrang.bp.release>
         <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
