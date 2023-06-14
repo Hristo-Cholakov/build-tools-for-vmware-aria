@@ -2,10 +2,10 @@
 title: vRealize Automation 8.x
 ---
 
-# vRealize Automation 8.x Project
+# {{ products.vra_8_full_name }} Project
 
 ## About
-vRA 8 project is a filesystem representation of vRA content into human friendly YAML or JSON format. The project consist of content descriptor and content container.
+{{ products.vra_8_short_name }} project is a filesystem representation of vRA content into human friendly YAML or JSON format. The project consist of content descriptor and content container.
 
 - *Content Descriptor* defines what vRA content will be part of this project.
 - *Content Container* holds the actual content representation.
@@ -15,76 +15,152 @@ Before you continue with this section validate that all of the prerequisites are
 - Install and Configure #TO DO: link to workstation setup
 
 
-## Create New vRA 8 Project
-**Build Tools for VMware Aria** provides ready to use project templates (*maven archetypes*).
+## Create New {{ products.vra_8_short_name }} Project
+{{ general.bta_name }} provides ready to use {{ products.vra_8_short_name }} project templates *maven archetypes*.
 
-To create a new vRA project from archetype use the following command:
-
+To create a new {{ products.vra_8_short_name }} project from archetype use the following command:
 ```Bash
-mvn archetype:generate \
-    -DinteractiveMode=false \
-    -DarchetypeGroupId=com.vmware.pscoe.vra-ng.archetypes \
-    -DarchetypeArtifactId=package-vra-ng-archetype \
-    -DarchetypeVersion=<iac_for_vrealize_version> \
-    -DgroupId=local.corp.it.cloud \
-    -DartifactId=catalog
+args=(
+    "-DinteractiveMode=false"
+    "-DarchetypeGroupId=com.vmware.pscoe.vra-ng.archetypes"
+    "-DarchetypeArtifactId=package-vra-ng-archetype"
+    "-DarchetypeVersion={{ iac.latest_release }}"
+    "-DgroupId={{ archetype.customer_project.group_id}}" # (1)!
+    "-DartifactId={{ archetype.customer_project.artifact_id}}" # (2)!
+)
+mvn archetype:generate "${args[@]}"
 ```
 
-**Note**: *The specified <iac_for_vrealize_version> should be minimum 2.4.11*
+1.  {{ archetype.customer_project.group_id_hint }}
+2.  {{ archetype.customer_project.artifact_id_hint }}
 
-The result of this command will produce the following project file structure:
+Content Descriptor is implemented by content.yaml file with the following defaults:
 
-```
-catalog
-├── README.md
-├── content.yaml
-├── pom.xml
-├── release.sh
-└── src
-    └── main
-        └── blueprints
-            └── blueprint.yaml
-        └── content-sources
-            └── source.json
-        └── property-group
-            └── property_group_name.json
-        └── catalog-items
-            └── forms
-                └── source name__workflow one name with custom form.json
-				└── source name__workflow one name with custom form__FormData.json
-                └── source name__workflow three name with custom icon and form.json
-				└── source name__workflow three name with custom icon and form__FormData.json
-            └── icons
-                └── source name__workflow two name with custom icon.png
-                └── source name__workflow three name with custom icon and form.png
-            └── source name__workflow one name with custom form.json
-            └── source name__workflow two name with custom icon.json
-            └── source name__workflow three name with custom icon and form.json
-        └── entitlements
-            └── Blueprint.yaml
-            └── Workflow.yaml
-            └── ABX Action.yaml       
-        └── subscriptions
-            └── subscription.json
-        └── regions
-            └── cloud-account-name~region-id
-                └── flavor-mappings
-                    └── small.json
-                └── image-mappings
-                    └── mapping.json
-                └── storage-profiles
-                    └── profile.json
-                └── src-region-profile.json
-        └── custom-resources
-            └── customResource.json
-        └── resource-actions
-            └── resourceAction.json
+```yaml
+---
+blueprint:
+subscription:
+flavor-mapping:
+  - small
+  - medium
+image-mapping: []
+storage-profile: []
+region-mapping:
+  cloud-account-tags:
+    export-tag: "env:dev"
+    import-tags: ["env:dev", "env:test"]
+catalog-item:
+custom-resource:
+resource-action:
+catalog-entitlement:
+content-source:
+property-group:
+policy:
+  content-sharing:
 ```
 
-Content Descriptor is implemented by content.yaml file with the following defaults.
+!!! note
+    {{ products.vra_8_short_name }} Project supports only content types outlined into Content Descriptor.
 
-**Note**: *vRA NG Project supports only content types outlined into content descriptor.*
+To capture the state of your vRA environment simply fill in the names of the content objects and follow the [Pull Content](#pull-content) section.
 
+<!-- Build Project Section -->
+{% include-markdown "../../assets/docs/mvn/build-project.md" %}
+The output of the command will result in **{{ archetype.customer_project.group_id}}.{{ archetype.customer_project.artifact_id}}-1.0.0-SNAPSHOT.vra-ng** file generated in the target folder of the project.
+
+<!-- Bundle Project Section -->
+{% include-markdown "../../assets/docs/mvn/bundle-project.md" %}
+
+## Environment Connection Parameters
+There are few ways to pass the vRA connection parameters to maven pull/push command:
+=== "Use Maven Profiles"
+
+    For {{ products.vra_8_short_name }} **basic** authentication append the following profile section in your maven settings.xml file.
+
+    ``` xml
+    ...<!--# (1)! -->
+    <profiles>
+      ...
+      <profile>
+          <id>{{ archetype.customer_project.maven_profile_name}}</id>
+          <properties>
+              <vrang.host>vra-fqdn</vrang.host>
+              <vrang.port>443</vrang.port>
+              <vrang.username>configurationadmin</vrang.username>
+              <vrang.password>*****</vrang.password>
+              <vrang.project.id>{project_id}</vrang.project.id>
+              <vrang.org.id>{org_id}</vrang.org.id>
+              <vrang.bp.release>true</vrang.bp.release>
+              <vrang.vro.integration>{vro_integration_name}</vrang.vro.integration>
+              <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
+              <vrang.data.collection.delay.seconds>{optional_vro_data_collection_delay_seconds}</vrang.data.collection.delay.seconds>
+          </properties>
+      </profile>
+    </profiles>
+    ```
+
+    1.  {{ archetype.customer_project.maven_settings_location_hint}}
+
+    For {{ products.vra_cloud_short_name }} **token** authentication append the following profile section in your maven settings.xml file.
+
+    ``` xml
+    ...<!--# (1)! -->
+    <profiles>
+      ...
+      <profile>
+          <id>{{ archetype.customer_project.maven_profile_name}}</id>
+          <properties>
+              <vrang.host>api.mgmt.cloud.vmware.com</vrang.host>
+              <vrang.csp.host>console.cloud.vmware.com</vrang.csp.host>
+              <vrang.proxy>http://proxy.host:80</vrang.proxy>
+              <vrang.port>443</vrang.port>
+              <vrang.project.id>{project_id}</vrang.project.id>
+              <vrang.org.id>{org_id}</vrang.org.id>
+              <vrang.refresh.token>{refresh_token}</vrang.refresh.token>
+              <vrang.bp.release>true</vrang.bp.release>
+              <vrang.vro.integration>{vro_integration_name}</vrang.vro.integration>
+              <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
+          </properties>
+      </profile>
+    </profiles>
+    ```
+
+    1.  {{ archetype.customer_project.maven_settings_location_hint}}
+
+    For {{ products.vra_8_short_name }} **token** authentication append the following profile section in your maven settings.xml file.
+
+    ``` xml
+    ...<!--# (1)! -->
+    <profiles>
+      ...
+      <profile>
+          <id>{{ archetype.customer_project.maven_profile_name}}</id>
+          <properties>
+              <vrang.host>vra-fqdn</vrang.host>
+              <vrang.port>443</vrang.port>
+              <vrang.project.id>{project_id}</vrang.project.id>
+              <vrang.org.id>{org_id}</vrang.org.id>
+              <vrang.refresh.token>{refresh_token}</vrang.refresh.token>
+              <vrang.bp.release>true</vrang.bp.release>
+              <vrang.vro.integration>{vro_integration_name}</vrang.vro.integration>
+              <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
+          </properties>
+      </profile>
+    </profiles>
+    ```
+
+    1.  {{ archetype.customer_project.maven_settings_location_hint}}
+
+    Use the profile by passing it with:
+    ``` bash
+    mvn vra:pull -P{{ archetype.customer_project.maven_profile_name}}
+    ```
+
+=== "Directly Pass {{ products.vra_cloud_short_name }} Token Parameters"
+
+    ``` sh
+    mvn vra-ng:pull -Dvrang.host=api.mgmt.cloud.vmware.com -Dvrang.csp.host=console.cloud.vmware.com -Dvra.port=443 -Dvrang.project.id={project_id} -Dvrang.refresh.token={refresh_token}
+    ```
 
 
 ### Export Rules for content types
@@ -113,96 +189,12 @@ To export all content in all regions linked to cloud accounts, the tag for expor
 If not defined, nothing will be exported.
 
 
-```yaml
-
----
-# Example describes export of: 
-#   Flavor mappings with names "small" and "medium" in all regions linked to cloud accounts with tag "env:dev"
-# Export Rules for all content types:
-#   flavor-mapping: []     - nothing will be exported
-#   flavor-mapping: 
-#        - small"
-#        - meduim
-#                          - only "small" and "meduim" will be exported 
-#   flavor-mapping:        - everything will be exported in all regions linked to cloud accounts with tag "env:dev"
-#
-#   
-# Example describes import of:
-#   All blueprints in src/blueprints
-#   All subscriptions in src/blueprints
-#   All flavor mappings in regions/ into regions linked to cloud accounts with tags "env:dev" or "env:test"
-# Example vra workflow catalog items ( Check notes down further on naming conventions )
-# catalog-item:
-#   - Content Source__Catalog Item 1
-#   - Content Source__Catalog Item 2
-# Example blueprints:
-# blueprint:
-#  - blueprint 1
-#  - bluepring 2
-#  - bluepring 3
-# Example property groups::
-# property-group:
-#  - memory
-#  - compute
-# Example subscriptions:
-# subscription:
-#  - subscription 1
-#  - subscription 2
-#  - subscription 3
-
-blueprint:
-subscription:
-flavor-mapping:
-  - small
-  - medium
-image-mapping: []
-storage-profile: []
-region-mapping:
-  cloud-account-tags:
-    export-tag: "env:dev"
-    import-tags: ["env:dev", "env:test"]
-catalog-item:
-  - Project Blueprints__WindowsVM
-  - Project Blueprints__LinuxVm
-  - Main Workflows__ConfigureVM
-custom-resource:
-resource-action:
-property-group:
-  - memory
-catalog-entitlement:
-  - Content source entitlement
-content-source:
-  - Project Blueprints
-  - Main Workflows
-  - Utility Workflows
-  - Project Abx Actions
-  - Project Code Stream pipelines
-
-```
-
 **Note**: *Unreleased blueprints that have custom form will be automatically released with version 1.*
 
 To capture the state of your vRA NG environment simply fill in the names of the content objects you would like to capture and look at the Pull section of this document.
 
 To import / export custom forms and/or icons you have to specify the associated catalog-item name in ```catalog-item``` tag. The naming convention for this is SOURCE_NAME__CATALOG_ITEM_NAME
 The integration end point data for each workflow that is associated with the content source will be updated as well with the one fetched from the VRA server. 
-
-## Building
-You can build any vRA NG project from sources using Maven:
-
-```bash
-mvn clean package
-```
-
-This will produce a vRA NG package with the groupId, artifactId and version specified in the pom. For example:
-
-```xml
-<groupId>local.corp.it.cloud</groupId>
-<artifactId>catalog</artifactId>
-<version>1.0.0-SNAPSHOT</version>
-<packaging>vra-ng</packaging>
-```
-will result in **local.corp.it.cloud.catalog-1.0.0-SNAPSHOT.vra-ng** generated in the target folder of your project.
 
 ## Pull
 When working on a vRA NG project, you mainly make changes on a live server using the vRA NG Console and then you need to capture those changes in the maven project on your filesystem.
@@ -215,94 +207,8 @@ vra-ng:pull -Dvrang.host=api.mgmt.cloud.vmware.com -Dvrang.csp.host=console.clou
 A better approach is to have the different vRO/vRA development environments specified as profiles in the local
 settings.xml file by adding the following snippet under "profiles":
 
-### Example profile for vRA Cloud using refresh token for authentication
 
-```xml
-<profile>
-    <id>corp-dev</id>
-    <properties>
-        <!--vRA NG Connection-->
-        <vrang.host>api.mgmt.cloud.vmware.com</vrang.host>
-        <vrang.csp.host>console.cloud.vmware.com</vrang.csp.host>
-        <vrang.proxy>http://proxy.host:80</vrang.proxy>
-        <vrang.port>443</vrang.port>
-        <vrang.project.id>{project+id}</vrang.project.id>
-        <!-- <vrang.project.name>{project+name}</vrang.project.name> -->
-        <vrang.org.id>{org+id}</vrang.org.id>
-		<vrang.org.name>{org+name}</vrang.org.name>
-        <vrang.refresh.token>{refresh+token}</vrang.refresh.token>
-        <vrang.bp.release>true</vrang.bp.release>
-        <vrang.vro.integration>{vro+integration+name}</vrang.vro.integration>
-        <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
-    </properties>
-</profile>
-```
 
-### Example profile for vRA On-Prem using refresh token for authentication
-
-```xml
-<profile>
-    <id>corp-dev</id>
-    <properties>
-        <!--vRA NG Connection-->
-        <vrang.host>vra-l-01a.corp.local</vrang.host>
-        <vrang.port>443</vrang.port>
-        <vrang.project.name>{project+name}</vrang.project.name>
-        <vrang.org.id>{org+id}</vrang.org.id>
-		    <vrang.org.name>{org+name}</vrang.org.name>
-        <vrang.refresh.token>{refresh+token}</vrang.refresh.token>
-        <vrang.bp.release>true</vrang.bp.release>
-        <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
-    </properties>
-</profile>
-```
-
-### Example profile for vRA On-Prem using username and password for authentication (basic auth)
-
-```xml
-<profile>
-    <id>corp-dev</id>
-    <properties>
-        <!--vRA NG Connection-->
-        <vrang.host>vra-l-01a.corp.local</vrang.host>
-        <vrang.port>443</vrang.port>
-        <vrang.username>{username}</vrang.username>
-        <vrang.password>{password}</vrang.password>
-        <!--The id of maven element containing the encrypted password and username-->
-        <vrang.serverId>${serverid}</vrang.serverId>
-        <vrang.project.id>{project+id}</vrang.project.id>
-        <!-- <vrang.project.name>{project+name}</vrang.project.name> -->
-        <vrang.org.id>{org+id}</vrang.org.id>
-		<vrang.org.name>{org+name}</vrang.org.name>
-        <vrang.bp.release>true</vrang.bp.release>
-        <vrang.vro.integration>{vro+integration+name}</vrang.vro.integration>
-        <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
-    </properties>
-</profile>
-```
-
-### Example profile for vRA On-Prem using username and password for authentication (basic auth) and with data collection timeout on import
-
-```xml
-<profile>
-    <id>corp-dev</id>
-    <properties>
-        <!--vRA NG Connection-->
-        <vrang.host>vra-l-01a.corp.local</vrang.host>
-        <vrang.port>443</vrang.port>
-        <vrang.username>{username}</vrang.username>
-        <vrang.password>{password}</vrang.password>
-        <vrang.project.id>{project+id}</vrang.project.id>
-        <!-- <vrang.project.name>{project+name}</vrang.project.name> -->
-        <vrang.org.id>{org+id}</vrang.org.id>
-		<vrang.org.name>{org+name}</vrang.org.name>
-        <vrang.bp.release>true</vrang.bp.release>
-        <vrang.vro.integration>{vro+integration+name}</vrang.vro.integration>
-        <vrang.data.collection.delay.seconds>{vro+data+collection+delay+seconds}</vrang.data.collection.delay.seconds>
-        <vrang.bp.ignore.versions>true|false</bp.ignore.versions>
-    </properties>
-</profile>
-```
 
 Then, you can sync content back to your local sources by simply activating the profile:
 
@@ -385,7 +291,7 @@ version of the blueprint. The following version formats are supported with their
 | 1.0.0-alpha    | 2020-05-27-10-10-43 | Arbitrary version - generate a new date-time based version |
 
 ## Regional Content
-The vRA 8.x philosophy is built around the concept of infrastructure definition capable of resource provisioning - 
+The {{ products.vra_8_short_name }} philosophy is built around the concept of infrastructure definition capable of resource provisioning - 
 compute, network, storage and other types of resources - that builds up an abstract model for resource description.
 This allows workload placement to happen dynamically based on various explicit or implicit rules. Part of this abstract
 model is the definition of various mappings and profiles that provide common higher-level definitions of underlying 
@@ -505,14 +411,6 @@ The other option is to set the flags in your Maven's settings.xml file for a spe
     </properties>
 </profile>
 ```
-
-## Bundling
-To produce a bundle.zip containing the package and all its dependencies, use:
-
-```
-$ mvn clean deploy -Pbundle
-```
-Refer to [Build Tools for VMware Aria](setup-workstation-maven.md)/Bundling for more information.
 
 ## Clean Up
 Clean up is currently not supported

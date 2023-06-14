@@ -38,6 +38,10 @@ extra:
     latest_release: 2.33.0
   general:
     bta_name: Build Tools for VMware Aria
+  products:
+    vra_8_full_name: vRealize Automation 8.x
+    vra_8_short_name: vRA 8
+    vra_cloud_short_name: vRA Cloud
   archetype:
     customer_project:
       group_id: com.company.bu

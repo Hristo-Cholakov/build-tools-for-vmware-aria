@@ -30,27 +30,9 @@ args=(
 mvn archetype:generate "${args[@]}"
 ```
 
-1.  {{ archetype.customer_project.group_id_hint}}
-2.  {{ archetype.customer_project.artifact_id_hint}}
+1.  {{ archetype.customer_project.group_id_hint }}
+2.  {{ archetype.customer_project.artifact_id_hint }}
    
-The result of the command will produce the following file structure:
-```
-.
-├── README.md
-├── content.yaml
-├── license_data
-│   ├── _license
-│   │   ├── template_header.txt.ftl
-│   │   └── template_license.txt.ftl
-│   └── licenses.properties
-├── pom.xml
-├── release.sh
-└── src
-    └── main
-        └── resources
-            └── README.md
-```
-
 Content Descriptor is implemented by content.yaml file with the following defaults:
 ```
 ---
@@ -72,13 +54,16 @@ workflow-subscription:
 ...
 ```
 !!! note
-    vRA Project supports only content types outlined into Content Descriptor.
+    vRA 7 Project supports only content types outlined into Content Descriptor.
 
-To capture the state of your vRA environment simply fill in the names of the content objects and follow the [Pull](#pull) section.
+To capture the state of your vRA environment simply fill in the names of the content objects and follow the [Pull Content](#pull-content) section.
 
 <!-- Build Project Section -->
 {% include-markdown "../../assets/docs/mvn/build-project.md" %}
 The output of the command will result in **{{ archetype.customer_project.group_id}}.{{ archetype.customer_project.artifact_id}}-1.0.0-SNAPSHOT.vra** file generated in the target folder of the project.
+
+<!-- Bundle Project Section -->
+{% include-markdown "../../assets/docs/mvn/bundle-project.md" %}
 
 ## Environment Connection Parameters
 There are two ways to pass the vRA connection parameters to maven pull/push command:
@@ -92,7 +77,6 @@ There are two ways to pass the vRA connection parameters to maven pull/push comm
       <profile>
           <id>{{ archetype.customer_project.maven_profile_name}}</id>
           <properties>
-              <!--vRA Connection-->
               <vra.host>vra-fqdn</vra.host>
               <vra.port>443</vra.port>
               <vra.username>configurationadmin@vsphere.local</vra.username>
@@ -124,9 +108,6 @@ There are two ways to pass the vRA connection parameters to maven pull/push comm
 
 <!-- Push Content Section -->
 {% include-markdown "../../assets/docs/mvn/push-content.md" %}
-
-<!-- Bundle Project Section -->
-{% include-markdown "../../assets/docs/mvn/bundle-project.md" %}
 
 <!-- Clean Up Content Section -->
 {% include-markdown "../../assets/docs/mvn/clean-up-content.md" %}

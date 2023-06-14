@@ -16,7 +16,7 @@ mvn package vrealize:push -P{{ archetype.customer_project.maven_profile_name}} -
     ```
     The command above will forcefully deploy the exact versions of the dependent packages, downgrading anything it finds on the server.
 
-### Ignore Certificates (Not recommended)
+### Ignore Certificates
 This section describes how to bypass a security feature in development/testing environment. **Do not use those flags when targeting production servers.** Instead, make sure the certificates have the correct CN, use FQDN to access the servers and add the certificates to Java's key store (i.e. cacerts).
 
 
