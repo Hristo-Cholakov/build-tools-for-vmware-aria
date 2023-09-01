@@ -149,7 +149,8 @@ public class VroPackageStore extends GenericPackageStore<VroPackageDescriptor> {
     public final List<Package> importAllPackages(final List<Package> vroPackages, final boolean dryrun, final boolean mergePackages, final boolean vroEnableBackup) {
 		this.validateFilesystem(vroPackages);
 		
-		System.out.println("Start executing import all packages...");
+		logger.info("Start executing import all packages...");
+
 		this.validateFilesystem(vroPackages);
 
 		List<Package> packagesToImport = vroPackages;
@@ -163,7 +164,8 @@ public class VroPackageStore extends GenericPackageStore<VroPackageDescriptor> {
 
 		if (vroEnableBackup && packagesToImport.size() > 0) {
 			//TO change the packages to backup to ALL the packages currently present in vRO -> in this if statements replace packagesToImport with destinationEndpointPackages
-			System.out.println("Number of packages to backup: " + packagesToImport.size());
+			logger.info("Number of packages to backup: ", packagesToImport.size());
+
 			boolean exportConfigAttributeValues = true;
 			boolean exportConfigSecureStringValues = true;
 
@@ -175,28 +177,47 @@ public class VroPackageStore extends GenericPackageStore<VroPackageDescriptor> {
 
 			packagesToImport.forEach(pkg -> {
 				String originalPkgFilePath = pkg.getFilesystemPath();
-				String backupFilePath = this.createBackupFilePath(pkg, currentDateTimeString, backupFilesDirectory);
 
 				try {
-					pkg.setFilesystemPath(backupFilePath);
-					restClient.exportPackage(pkg, dryrun, exportConfigAttributeValues, exportConfigSecureStringValues);
+					logger.info("Package for back up: ", pkg.getFQName());
+
+					List<Package> samePackagesInDest = new ArrayList<Package>();
+					for (int i = 0; i < destinationEndpointPackages.size(); i++) {
+						String currentVroPackageName = destinationEndpointPackages.get(i).getName();
+
+						if (currentVroPackageName.equals(pkg.getName())) {
+							samePackagesInDest.add(destinationEndpointPackages.get(i));
+						}
+					}
+
+					if (samePackagesInDest.size() > 0) {
+						Package highestVersionPac = this.getHighestVersion(samePackagesInDest);
+						String backupFilePath = this.createBackupFilePath(highestVersionPac, currentDateTimeString, backupFilesDirectory);
+						highestVersionPac.setFilesystemPath(backupFilePath);
+						restClient.exportPackage(highestVersionPac, dryrun, exportConfigAttributeValues, exportConfigSecureStringValues);
+					
+					} else {
+						logger.info("The package does not exist in vRO and backup is skipped: ", pkg.getName());
+					}
 				} catch (Exception ex) {
 					String exceptionMessage = ex.getMessage();
-					System.out.println("ExceptionMessage: " + exceptionMessage);
-					System.out.println("Package Name: " + pkg.getName());
+					logger.info("ExceptionMessage: ", exceptionMessage);
+					logger.info("Package Name: ", pkg.getName());
 
 					if (!exceptionMessage.contains("404 Not Found")
 						||
 						!exceptionMessage.contains(pkg.getName())) { //Unexpected exception
 						throw ex;
 					} else { //The package to be imported has been deleted from the server
-						System.out.println(ex.getMessage());
+						logger.info("ExceptionMessage: ", ex.getMessage());
 					}
 				}
 
-				System.out.println("Restoring original file path...");
+				logger.info("Restoring original file path... ");
+
 				pkg.setFilesystemPath(originalPkgFilePath);
-				System.out.println("File path after restoration: " + pkg.getFilesystemPath());
+				logger.info("File path after restoration: ", pkg.getFilesystemPath());
+
 			});
 		}
 
@@ -374,5 +395,31 @@ public class VroPackageStore extends GenericPackageStore<VroPackageDescriptor> {
         logger.debug("newFullPath: " + newFullPath);
 
 		return newFullPath;
+	}
+
+	/**
+	 * Compares packages by their version and return the highest version package.
+	 * @param packages the collection of packages differring by version
+	 * @return the package with highest version
+	 */
+	private Package getHighestVersion(List<Package> packages) {
+
+		Package highestVersionPac = packages.get(0);
+		if (packages.size() == 1) { 
+			logger.info("Highest version package to backup: ", highestVersionPac.getFQName());
+			return highestVersionPac;
+		}
+		
+		for (int i = 0; i < packages.size() - 1; i++) {
+			int diff = highestVersionPac.compareTo(packages.get(i + 1));
+			if (diff > 0) {
+				highestVersionPac = packages.get(i);
+			} else {
+				highestVersionPac = packages.get(i + 1);
+			}
+		}
+		
+		logger.info("Highest version package to backup: ", highestVersionPac.getFQName());
+		return highestVersionPac;
 	}
 }
